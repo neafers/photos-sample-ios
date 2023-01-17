@@ -42,7 +42,7 @@ class WebImageProvider: ImageProvider {
             return completion(image)
         }
         
-        guard activeDownloads[cacheName] == nil else {
+        guard !activeDownloads.keys.contains(cacheName) else {
             activeDownloads[cacheName]?.append(completion)
             return
         }
@@ -60,9 +60,6 @@ class WebImageProvider: ImageProvider {
             
             // add this result to cache
             self?.cache?.cache(data: data, named: cacheName, completion: nil)
-            
-            // process any queued completions
-            self?.processCompletions(for: cacheName, image: image)
             
             // and run the initial completion
             completion(image)
